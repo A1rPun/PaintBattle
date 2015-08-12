@@ -1,5 +1,12 @@
 ﻿(function () {
-	var players = [new PB.player()];
+    var players = [
+        new PB.player({
+            left: 37,
+            right: 39,
+            color: '#C1053D'
+        })
+    ];
+
     function makeImages(images, callback) {
         var result = {},
             loads = 0,
@@ -83,14 +90,18 @@
             }
         }
     };
+
+    makeImages({
+        bg: 'img/canvas.png'
+    }, init);
     /*
-    makeImages({}, init);
     makeAudio({}, function (sounds) {
         PB.sound = sounds;
     });
 	*/
     function init(images) {
-		PB.keys = [];
+        PB.keys = [];
+        PB.images = images;
         document.addEventListener('keydown', function (e) {
             e = e ? e : window.event;
             PB.keys[e.keyCode] = true;

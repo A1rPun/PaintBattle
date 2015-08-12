@@ -61,9 +61,6 @@ PB.vector = (function () {
     vector.prototype.dot = function (otherVector) {
         var dotProduct = ((this.x * otherVector.getX()) + (this.y * otherVector.getY()));
         return dotProduct;
-        //x *= otherVector.getX();
-        //y *= otherVector.getY();
-        //return new vector(x,y);
     }
 
     return vector;

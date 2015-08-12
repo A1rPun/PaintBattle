@@ -7,10 +7,8 @@ function extend(base, sub, proto) {
     sub.prototype.constructor = sub;
 }
 PB.object = (function () {
-    function object(x, y, veloX, veloY) {
+    function object(x, y) {
         this.position = new PB.vector(x, y);
-        this.velocity = new PB.vector(veloX, veloY);
-        this.update = function () { this.position = this.position.add(this.velocity); };
     }
 	object.prototype = {};
     return object;
