@@ -1,4 +1,5 @@
-SneekMe
+Paint Battle
 =======
 
-under_construction.gif ;)
+Inspired by the original game **Battle Painters**
+![original.jpg](/img/original.jpg)
