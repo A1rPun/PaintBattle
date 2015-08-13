@@ -8,7 +8,7 @@ function extend(base, sub, proto) {
 }
 PB.object = (function () {
     function object(x, y) {
-        this.position = new PB.vector(x, y);
+        this.position = new PB.vector(x || 0, y || 0);
     }
 	object.prototype = {};
     return object;

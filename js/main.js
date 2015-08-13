@@ -1,11 +1,40 @@
 ﻿(function () {
-    var players = [
-        new PB.player({
-            left: 37,
-            right: 39,
-            color: '#C1053D'
-        })
-    ];
+    var midX = 400,
+        midY = 300,
+        players = [
+            new PB.player({
+                x: midX - 40,
+                y: midY - 30,
+                degree: 225,
+                left: 37,
+                right: 39,
+                color: '#C1053D'
+            }),
+            new PB.player({
+                x: midX + 40,
+                y: midY - 30,
+                degree: 315,
+                left: 37,
+                right: 39,
+                color: '#BADA55'
+            }),
+            new PB.player({
+                x: midX - 40,
+                y: midY + 30,
+                degree: 135,
+                left: 37,
+                right: 39,
+                color: '#C0FFEE'
+            }),
+            new PB.player({
+                x: midX + 40,
+                y: midY + 30,
+                degree: 45,
+                left: 37,
+                right: 39,
+                color: '#FA7A55'
+            })
+        ];
 
     function makeImages(images, callback) {
         var result = {},

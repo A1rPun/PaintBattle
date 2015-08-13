@@ -1,19 +1,22 @@
 ﻿PB.player = (function (obj) {
-    var DEFAULT_RADIUS = 25,
+    var DEFAULT_RADIUS = 20,
         DEFAULT_SPEED = 2,
         DEFAULT_TURN_SPEED = 3;
     // constructor
     function player(options) {
         //Default properties that can be overridden
-		obj.call(this, 400, 300);
+		obj.call(this, options && options.x, options && options.y);
 		this.name = 'Player';
-		this.radius = DEFAULT_RADIUS;
-		this.degree = 2;
-		this.speed = DEFAULT_SPEED;
+		this.degree = 0;
+
         if (arguments[0]) for (var prop in arguments[0]) this[prop] = arguments[0][prop];
 
         //Default properties that can't be overridden
         this.score = 0;
+        this.canDraw = true;
+        this.speed = DEFAULT_SPEED;
+        this.radius = DEFAULT_RADIUS;
+        
     }
     extend(obj, player, {
         move: function () {

@@ -52,6 +52,7 @@
     function drawPlayers() {
         for (var i = players.length; i--;) {
             var player = players[i];
+            if (!player.canDraw) continue;
             ctx.fillStyle = player.color;
             ctx.beginPath();
             ctx.arc(player.position.x, player.position.y, player.radius, 0, 2 * Math.PI, false);
