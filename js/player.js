@@ -17,19 +17,31 @@
     }
     extend(obj, player, {
         move: function () {
+            var me = this;
 
-            if (PB.keys[this.left]) {
-                this.degree -= DEFAULT_TURN_SPEED;
-            } else if (PB.keys[this.right]) {
-                this.degree += DEFAULT_TURN_SPEED;
+            if (PB.keys[me.left]) {
+                me.degree -= DEFAULT_TURN_SPEED;
+            } else if (PB.keys[me.right]) {
+                me.degree += DEFAULT_TURN_SPEED;
             }
+            //degrees = radians * 180 / Math.PI;
+            var radian = me.degree * Math.PI / 180;
+            x = me.position.x + (Math.cos(radian) * me.speed),
+            y = me.position.y + (Math.sin(radian) * me.speed);
+            me.position = new PB.vector(x, y);
+        },
+        restrict: function (bounds) {
+            var me = this;
 
-            var //angle = Math.acos(this.x / this.magnitude()),
-                //degrees = radians * 180 / PI;
-                radian = this.degree * Math.PI / 180;
-            x = this.position.x + (Math.cos(radian) * this.speed),
-            y = this.position.y + (Math.sin(radian) * this.speed);
-            this.position = new PB.vector(x, y);
+            if (me.position.x < bounds.left + me.radius)
+                me.position.x = bounds.left + me.radius;
+            else if (me.position.x > bounds.right - me.radius)
+                me.position.x = bounds.right - me.radius;
+
+            if (me.position.y < bounds.top + me.radius)
+                me.position.y = bounds.top + me.radius;
+            else if (me.position.y > bounds.bottom - me.radius)
+                me.position.y = bounds.bottom - me.radius;
         }
     });
     return player;

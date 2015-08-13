@@ -45,11 +45,11 @@
         for (var i = players.length; i--;) {
             var player = players[i];
             player.move();
+            player.restrict(bounds);
         }
     }
 
     function drawPlayers() {
-        
         for (var i = players.length; i--;) {
             var player = players[i];
             ctx.fillStyle = player.color;
