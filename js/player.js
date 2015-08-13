@@ -16,7 +16,6 @@
         if (arguments[0]) for (var prop in arguments[0]) this[prop] = arguments[0][prop];
 
         //Default properties that can't be overridden
-        this.score = 0;
         this.canDraw = true;
         this.speed = DEFAULT_SPEED;
         this.radius = DEFAULT_RADIUS;

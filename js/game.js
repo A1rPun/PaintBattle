@@ -19,6 +19,11 @@
         propCanvas.height = bounds.bottom;
         gameState.start('game');
 
+        setTimeout(function() {
+            alert(findWinner().join('\n'));
+            gameState.stop();
+        }, 60000);
+
         PB.keyHandler = function (key) {
             //space
             if (key === 32) {
@@ -45,13 +50,13 @@
         for (var i = players.length; i--;) {
             var player = players[i];
             propCtx.drawImage(
-                PB.images.brush, player.position.x - player.radius, player.position.y - player.radius - player.radius / 2,
+                PB.images.brush, (player.position.x | 0) - player.radius, (player.position.y | 0) - player.radius - player.radius / 2,
                 player.radius *2, player.radius*2
             );
             if (!player.canDraw) continue;
             ctx.fillStyle = player.color;
             ctx.beginPath();
-            ctx.arc(player.position.x, player.position.y, player.radius, 0, 2 * Math.PI, false);
+            ctx.arc(player.position.x | 0, player.position.y | 0, player.radius, 0, 2 * Math.PI, false);
             ctx.fill();
         }
     }
@@ -62,12 +67,12 @@
     }
 
     function rgbToHex(r, g, b) {
-        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
     }
 
     function findWinner() {
         var amountOfPixels = bounds.right * bounds.bottom,
-            result = {},
+            colors = {},
             imageData = ctx.getImageData(0, 0, bounds.right, bounds.bottom).data;
         
         for (var i = 0, n = imageData.length; i < n; i += 4) {
@@ -77,12 +82,20 @@
                 a = imageData[i + 3],
                 hex = rgbToHex(r, g, b);
 
-            if (result[hex]) {
-                result[hex]++;
+            if (colors[hex]) {
+                colors[hex]++;
             } else {
-                result[hex] = 1;
+                colors[hex] = 1;
             }
         }
-        console.log(result);
+        var result = [];
+
+        for (var i = 0, l = players.length; i < l; i++) {
+            var player = players[i];
+            var amountOfColor = colors[player.color];
+            var percent = amountOfColor * 100 / amountOfPixels;
+            result.push(player.name + ': ' + Math.ceil(percent) + '%');
+        }
+        return result;
     }
 };
