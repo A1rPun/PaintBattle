@@ -139,10 +139,16 @@
 
     makeImages({
         bg: 'img/canvas.png',
-        brush: 'img/brush.gif'
+        brush: 'img/brush.gif',
+        shadow: 'img/shadow.png',
+        pickup: 'img/present.png',
     }, init);
     /*
-    makeAudio({}, function (sounds) {
+    makeAudio({
+        //menu: 'snd/music1.mp3',
+        bg: 'snd/music2.mp3',
+        //win: 'snd/music3.mp3'
+    }, function (sounds) {
         PB.sound = sounds;
     });
 	*/

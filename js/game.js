@@ -4,6 +4,7 @@
         propCanvas = document.getElementById('Prop'),
         propCtx = propCanvas.getContext("2d"),
         pause = false,
+        pickup = null,
         gameState = new PB.gameState({
             canvas: propCanvas,
             context: propCtx,
@@ -20,9 +21,13 @@
         gameState.start('game');
 
         setTimeout(function() {
-            alert(findWinner().join('\n'));
             gameState.stop();
+            alert(findWinner().join('\n'));
         }, 60000);
+
+        setInterval(function () {
+            pickup = new PB.pickup(bounds);
+        }, 10000);
 
         PB.keyHandler = function (key) {
             //space
@@ -43,27 +48,76 @@
             var player = players[i];
             player.move();
             player.restrict(bounds);
+
+            if (player.canCollide) {
+                player.canCollide = false;
+                var collision = player.checkCircleCollision(players).collision,
+                    j = collision.length;
+                player.canCollide = true;
+
+                if (j) {
+                    for (; j--;) {
+                        collision[j].jump();
+                    }
+                    player.jump();
+                }
+            }
         }
     }
 
     function drawPlayers() {
         for (var i = players.length; i--;) {
-            var player = players[i];
+            var player = players[i],
+                solved = player.resolve(player.radius),
+                x = player.position.x | 0,
+                y = player.position.y | 0;
+            //draw image
             propCtx.drawImage(
-                PB.images.brush, (player.position.x | 0) - player.radius, (player.position.y | 0) - player.radius - player.radius / 2,
+                PB.images.shadow, x - player.radius, y - player.radius,
+                player.radius * 2, player.radius * 2
+            );
+            propCtx.drawImage(
+                PB.images.brush, x - player.radius, y - player.radius - player.imgOffset,
                 player.radius *2, player.radius*2
             );
-            if (!player.canDraw) continue;
+            //draw heading direction line
+            propCtx.beginPath();
+            propCtx.moveTo(x, y);
+            propCtx.lineTo(solved.x, solved.y);
+            propCtx.stroke();
+            //draw paint
+            if (!player.canDraw()) continue;
             ctx.fillStyle = player.color;
             ctx.beginPath();
-            ctx.arc(player.position.x | 0, player.position.y | 0, player.radius, 0, 2 * Math.PI, false);
+            ctx.arc(player.position.x | 0, player.position.y | 0, player.radius, 0, 180 * Math.PI, false);
             ctx.fill();
         }
+    }
+
+    
+
+    function updatePickup() {
+        var collisions = pickup.checkCircleCollision(players);
+
+        if (collisions.collision.length) {
+            pickup.get(collisions, bounds, ctx, gameState);
+            pickup = null;
+        }
+    }
+
+    function drawPickup() {
+        propCtx.drawImage(PB.images.pickup, pickup.position.x - pickup.radius / 2, pickup.position.y - pickup.radius / 2,
+            pickup.radius, pickup.radius);
     }
 
     function update() {
         updatePlayers();
         drawPlayers();
+
+        if (pickup) {
+            drawPickup();
+            updatePickup();
+        }
     }
 
     function rgbToHex(r, g, b) {
@@ -88,14 +142,17 @@
                 colors[hex] = 1;
             }
         }
-        var result = [];
+        var result = [],
+            total = 0;
 
         for (var i = 0, l = players.length; i < l; i++) {
             var player = players[i];
             var amountOfColor = colors[player.color];
-            var percent = amountOfColor * 100 / amountOfPixels;
-            result.push(player.name + ': ' + Math.ceil(percent) + '%');
+            var percent = Math.ceil(amountOfColor * 100 / amountOfPixels);
+            result.push(player.name + ': ' + percent + '%');
+            total += percent;
         }
+        result.push('Total: ' + total + '%');
         return result;
     }
 };
