@@ -11,7 +11,6 @@
             me.setFps(o.fps || 60);
         }
         me.pause = true;
-        me.doClear = !(o.doClear === false);
         me.then = Date.now();
         //bind loop to variable because of requestAnimationFrame call.
         me.boundLoop = me.loop.bind(me);
@@ -36,7 +35,7 @@
 
                 if (delta > me.interval) {
                     me.then = me.now - (delta % me.interval);
-                    me.doClear && me.clear();
+                    me.clear();
                     me.update && me.update(delta);
                 }
                 me.queue();

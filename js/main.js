@@ -1,39 +1,52 @@
 ﻿(function () {
     var midX = 400,
         midY = 300,
+        bounds = {
+            top: 0,
+            right: 800,
+            bottom: 600,
+            left: 0
+        },
         players = [
             new PB.player({
-                x: midX - 40,
+                x: midX - 30,
                 y: midY - 30,
                 degree: 225,
                 left: 37,
                 right: 39,
-                color: '#C1053D'
+                color: '#FF5EAA',
+                //isComputer: true
             }),
+            /* */
             new PB.player({
-                x: midX + 40,
+                x: midX + 30,
                 y: midY - 30,
                 degree: 315,
                 left: 37,
                 right: 39,
-                color: '#BADA55'
+                color: '#299EFE',
+                isComputer: true
             }),
+            /* */
             new PB.player({
-                x: midX - 40,
+                x: midX - 30,
                 y: midY + 30,
                 degree: 135,
                 left: 37,
                 right: 39,
-                color: '#C0FFEE'
+                color: '#FDBC56',
+                isComputer: true
             }),
             new PB.player({
-                x: midX + 40,
+                x: midX + 30,
                 y: midY + 30,
                 degree: 45,
                 left: 37,
                 right: 39,
-                color: '#FA7A55'
+                color: '#67DB66',
+                isComputer: true
             })
+            /* */
         ];
 
     function makeImages(images, callback) {
@@ -121,13 +134,23 @@
     };
 
     makeImages({
-        bg: 'img/canvas.png'
+        bg: 'img/canvas.png',
+        brush: 'img/brush.gif'
     }, init);
     /*
     makeAudio({}, function (sounds) {
         PB.sound = sounds;
     });
 	*/
+
+    function drawBackground() {
+        var bgCanvas = document.getElementById('BG'),
+            bgCtx = bgCanvas.getContext('2d');
+        bgCanvas.width = bounds.right;
+        bgCanvas.height = bounds.bottom;
+        bgCtx.drawImage(PB.images.bg, 0, 0, bounds.right, bounds.bottom);
+    }
+
     function init(images) {
         PB.keys = [];
         PB.images = images;
@@ -140,6 +163,7 @@
             e = e ? e : window.event;
             PB.keys[e.keyCode] = false;
         });
-		PB.startGame(players);
+        drawBackground();
+		PB.startGame(bounds, players);
     }
 }());

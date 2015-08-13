@@ -1,4 +1,8 @@
 ﻿PB.player = (function (obj) {
+    function rand(num) {
+        return Math.floor(Math.random() * num);
+    }
+
     var DEFAULT_RADIUS = 20,
         DEFAULT_SPEED = 2,
         DEFAULT_TURN_SPEED = 3;
@@ -20,9 +24,12 @@
     }
     extend(obj, player, {
         move: function () {
+            
             var me = this;
 
-            if (PB.keys[me.left]) {
+            if (me.isComputer) {
+                me.degree += rand(20) - 10;
+            }else if (PB.keys[me.left]) {
                 me.degree -= DEFAULT_TURN_SPEED;
             } else if (PB.keys[me.right]) {
                 me.degree += DEFAULT_TURN_SPEED;

@@ -1,30 +1,22 @@
-﻿PB.startGame = function (players) {
-    function rand(num) {
-        return Math.floor(Math.random() * num);
-    }
-	
+﻿PB.startGame = function (bounds, players) {
     var canvas = document.getElementById('PB'),
         ctx = canvas.getContext("2d"),
+        propCanvas = document.getElementById('Prop'),
+        propCtx = propCanvas.getContext("2d"),
         pause = false,
         gameState = new PB.gameState({
-            doClear: false,
+            canvas: propCanvas,
+            context: propCtx,
             fps: 60,
-            canvas: canvas,
-            context: ctx,
             states: { game: update }
-        }),
-        bounds = {
-            top: 0,
-            right: 800,
-            bottom: 600,
-            left: 0
-        };
+        });
 
     init();
     function init() {
         canvas.width = bounds.right;
         canvas.height = bounds.bottom;
-        ctx.drawImage(PB.images.bg, 0, 0, bounds.right, bounds.bottom);
+        propCanvas.width = bounds.right;
+        propCanvas.height = bounds.bottom;
         gameState.start('game');
 
         PB.keyHandler = function (key) {
@@ -52,6 +44,10 @@
     function drawPlayers() {
         for (var i = players.length; i--;) {
             var player = players[i];
+            propCtx.drawImage(
+                PB.images.brush, player.position.x - player.radius, player.position.y - player.radius - player.radius / 2,
+                player.radius *2, player.radius*2
+            );
             if (!player.canDraw) continue;
             ctx.fillStyle = player.color;
             ctx.beginPath();
@@ -63,5 +59,30 @@
     function update() {
         updatePlayers();
         drawPlayers();
+    }
+
+    function rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function findWinner() {
+        var amountOfPixels = bounds.right * bounds.bottom,
+            result = {},
+            imageData = ctx.getImageData(0, 0, bounds.right, bounds.bottom).data;
+        
+        for (var i = 0, n = imageData.length; i < n; i += 4) {
+            var r = imageData[i],
+                g = imageData[i + 1],
+                b = imageData[i + 2],
+                a = imageData[i + 3],
+                hex = rgbToHex(r, g, b);
+
+            if (result[hex]) {
+                result[hex]++;
+            } else {
+                result[hex] = 1;
+            }
+        }
+        console.log(result);
     }
 };

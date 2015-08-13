@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
     <title>Paint Battle</title>
@@ -9,13 +9,18 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <canvas id="PB"></canvas>
+    <div class="center">
+        <canvas id="BG" style="z-index: 1;"></canvas>
+        <canvas id="PB" style="z-index: 2;"></canvas>
+        <canvas id="Prop" style="z-index: 3;"></canvas>
+    </div>
+
     <!-- Scripts -->
     <script type="text/javascript">
         window.PB = window.PB || {};
     </script>
     <script src="js/vector.js"></script>
-    <script src="js/object.js"></script>    
+    <script src="js/object.js"></script>
     <script src="js/player.js"></script>
     <script src="js/gameState.js"></script>
     <script src="js/game.js"></script>

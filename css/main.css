@@ -8,10 +8,15 @@ body {
   background-color: #333;
   color: #fff;
 }
-#PB {
+canvas {
+  position: absolute;
+  left: 0;
+}
+.center {
+  position: relative;
+  display: block;
   width: 800px;
   height: 600px;
-  display: block;
   margin: 10px auto;
 }
 /*# sourceMappingURL=main.css.map */
