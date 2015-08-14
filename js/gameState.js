@@ -62,3 +62,65 @@
     };
     return gameState;
 })(window);
+/*
+PB.timer = (function (g) {
+    var requestAnimFrame = g.requestAnimationFrame
+            || g.webkitRequestAnimationFrame
+            || g.mozRequestAnimationFrame
+            || function(callback) {
+                g.setTimeout(callback, 1000 / 60);
+            },
+        cancelAnimFrame = g.cancelAnimationFrame
+            || g.mozCancelAnimationFrame
+            || g.clearTimeout;
+
+
+    function timer() {
+        var me = this;
+        me.interval = interval || 1000 / 60;
+        me.enabled = disable ? false : true;
+        me.then = Date.now();
+        //bind loop to variable because of requestAnimationFrame call.
+        me.boundLoop = fn.bind(me);
+    }
+
+    function loop() {
+        requestAnimFrame(loop);
+    }
+    requestAnimFrame(loop);
+
+    timer.prototype = {
+        loop: function () {
+            var me = this;
+            if (me.pause) return;
+
+            me.now = Date.now();
+            var delta = me.now - me.then;
+
+            if (delta > me.interval) {
+                me.then = me.now - (delta % me.interval);
+            }
+        },
+        start: function (state) {
+            var me = this;
+            me.update = me.states[me.state];
+
+            if (!me.enabled) {
+                me.enabled = true;
+                me.queue();
+            }
+        },
+        stop: function () {
+            this.enabled = false;
+        }
+    };
+    return {
+        timeout: function (fn, interval, disable) {
+            return new timer();
+        },
+        interval: function (fn, interval, disable) {
+            
+        }
+    };
+})(window);
+*/
