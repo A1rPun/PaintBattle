@@ -1,126 +1,88 @@
-﻿PB.gameState = (function (g) {
-
-    // constructor
-    function gameState(o) {
-        var me = this;
-
-        if (o) {
-            me.canvas = o.canvas;
-            me.ctx = o.context || me.canvas.getContext('2d');
-            me.states = o.states || {};
-            me.setFps(o.fps || 60);
-        }
-        me.pause = true;
-        me.then = Date.now();
-        //bind loop to variable because of requestAnimationFrame call.
-        me.boundLoop = me.loop.bind(me);
-    }
-
-    gameState.prototype = {
-        clear: function () {
-            var c = this.canvas;
-            this.ctx.clearRect(0, 0, c.width, c.height);
-        },
-        setFps: function (F) {
-            this.interval = 1000 / F;
-        },
-        isState: function (state) {
-            return this.state === state
-        },
-        loop: function () {
-            var me = this;
-            if (!me.pause) {
-                me.now = Date.now();
-                var delta = me.now - me.then;
-
-                if (delta > me.interval) {
-                    me.then = me.now - (delta % me.interval);
-                    me.clear();
-                    me.update && me.update(delta);
-                }
-                me.queue();
-                me.loops++;
-            }
-        },
-        queue: function () {
-            g.requestAnimationFrame(this.boundLoop);
-        },
-        start: function (state) {
-            var me = this;
-            me.state = state;
-            me.loops = 0;
-            me.update = me.states[me.state];
-
-            if (me.pause) {
-                me.pause = false;
-                me.queue();
-            }
-        },
-        stop: function () {
-            this.pause = true;
-        }
-    };
-    return gameState;
-})(window);
-/*
-PB.timer = (function (g) {
-    var requestAnimFrame = g.requestAnimationFrame
+﻿PB.timer = (function (g) {
+    var fps60 = 1000 / 60,
+        requestAnimFrame = g.requestAnimationFrame
             || g.webkitRequestAnimationFrame
             || g.mozRequestAnimationFrame
             || function(callback) {
-                g.setTimeout(callback, 1000 / 60);
+                g.setTimeout(callback, fps60);
             },
         cancelAnimFrame = g.cancelAnimationFrame
             || g.mozCancelAnimationFrame
             || g.clearTimeout;
 
+    function moment(loop, fn, interval) {
+        this.loop = loop;
+        this.fn = fn;
+        this.interval = interval || fps60;
+        this.delta = 0;
+    }
 
-    function timer() {
+    function timer(disable) {
         var me = this;
-        me.interval = interval || 1000 / 60;
+        me.id = null;
+        me.interval = fps60;
         me.enabled = disable ? false : true;
         me.then = Date.now();
-        //bind loop to variable because of requestAnimationFrame call.
-        me.boundLoop = fn.bind(me);
+        me.moments = [];
+        //bind loop to variable because of the scope in requestAnimationFrame call.
+        me.boundLoop = me.loop.bind(me);
+        me.queue();
     }
-
-    function loop() {
-        requestAnimFrame(loop);
-    }
-    requestAnimFrame(loop);
 
     timer.prototype = {
         loop: function () {
             var me = this;
-            if (me.pause) return;
 
+            if (!me.enabled)
+                return;
             me.now = Date.now();
+            //TODO: delta update
             var delta = me.now - me.then;
+            //me.delta = delta;
 
             if (delta > me.interval) {
+                //add the remaining delta for the next check
                 me.then = me.now - (delta % me.interval);
-            }
-        },
-        start: function (state) {
-            var me = this;
-            me.update = me.states[me.state];
 
-            if (!me.enabled) {
-                me.enabled = true;
-                me.queue();
+                for (var i = me.moments.length; i--;) {
+                    var m = me.moments[i];
+                    m.delta += delta;
+
+                    if (m.delta < m.interval)
+                        continue;
+                    m.fn();
+                    m.delta = 0;
+
+                    if (!m.loop) 
+                        me.moments.splice(i, 1);
+                }
             }
+            me.queue();
         },
-        stop: function () {
+        start: function () {
+            var me = this;
+
+            if (me.enabled)
+                return;
+            me.enabled = true;
+            me.then = Date.now();
+            me.queue();
+        },
+        queue: function () {
+            this.id = requestAnimFrame(this.boundLoop);
+        },
+        stop: function () {            
             this.enabled = false;
-        }
-    };
-    return {
-        timeout: function (fn, interval, disable) {
-            return new timer();
+            this.id && cancelAnimFrame(this.id);
         },
-        interval: function (fn, interval, disable) {
-            
+        setTimeout: function (fn, interval) {
+            var m = new moment(false, fn, interval);
+            this.moments.push(m);
+        },
+        setInterval: function (fn, interval) {
+            var m = new moment(true, fn, interval);
+            this.moments.push(m);
         }
     };
+    return timer;
 })(window);
-*/

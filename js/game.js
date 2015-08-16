@@ -5,12 +5,7 @@
         propCtx = propCanvas.getContext("2d"),
         pause = false,
         pickup = null,
-        gameState = new PB.gameState({
-            canvas: propCanvas,
-            context: propCtx,
-            fps: 60,
-            states: { game: update }
-        });
+        gameState = new PB.timer();
 
     init();
     function init() {
@@ -18,14 +13,14 @@
         canvas.height = bounds.bottom;
         propCanvas.width = bounds.right;
         propCanvas.height = bounds.bottom;
-        gameState.start('game');
+        gameState.setInterval(update);
 
-        setTimeout(function() {
+        gameState.setTimeout(function () {
             gameState.stop();
             alert(findWinner().join('\n'));
         }, 60000);
 
-        setInterval(function () {
+        gameState.setInterval(function () {
             pickup = new PB.pickup(bounds);
         }, 10000);
 
@@ -34,7 +29,7 @@
             if (key === 32) {
                 if (pause) {
                     pause = false;
-                    gameState.start('game');
+                    gameState.start();
                 } else {
                     pause = true;
                     gameState.stop();
@@ -46,7 +41,7 @@
     function updatePlayers() {
         for (var i = players.length; i--;) {
             var player = players[i];
-            player.move();
+            player.move(gameState);
             player.restrict(bounds);
 
             if (player.canCollide) {
@@ -77,9 +72,17 @@
                 player.radius * 2, player.radius * 2
             );
             propCtx.drawImage(
-                PB.images.brush, x - player.radius, y - player.radius - player.imgOffset,
+                player.drawing ? PB.images.brush : PB.images.clean, x - player.radius, y - player.radius - player.imgOffset,
                 player.radius *2, player.radius*2
             );
+
+            if (player.stunned) {
+                propCtx.drawImage(
+                    PB.images.plaster, x - player.radius / 2, y - player.radius,
+                    player.radius, player.radius
+                );
+            }
+
             //draw heading direction line
             propCtx.beginPath();
             propCtx.moveTo(x, y);
@@ -94,30 +97,36 @@
         }
     }
 
-    
-
     function updatePickup() {
         var collisions = pickup.checkCircleCollision(players);
 
         if (collisions.collision.length) {
-            pickup.get(collisions, bounds, ctx, gameState);
+            pickup.get(collisions, gameState, ctx, bounds);
             pickup = null;
         }
+        return pickup;
     }
 
     function drawPickup() {
-        propCtx.drawImage(PB.images.pickup, pickup.position.x - pickup.radius / 2, pickup.position.y - pickup.radius / 2,
-            pickup.radius, pickup.radius);
+        propCtx.drawImage(PB.images.pickup, pickup.position.x - pickup.radius, pickup.position.y - pickup.radius,
+            pickup.radius * 2, pickup.radius * 2);
+    }
+
+    function drawDebug() {
+        propCtx.fillStyle = '#F00';
+        propCtx.font = "11px Verdana";
+
+        for (var i = 0, l = gameState.moments.length; i < l; i++) {
+            propCtx.fillText(gameState.moments[i].delta | 0, 10, (i * 15) + 30);
+        }
     }
 
     function update() {
+        propCtx.clearRect(0, 0, bounds.right, bounds.bottom);
         updatePlayers();
         drawPlayers();
-
-        if (pickup) {
-            drawPickup();
-            updatePickup();
-        }
+        pickup && updatePickup() && drawPickup();
+        drawDebug();
     }
 
     function rgbToHex(r, g, b) {

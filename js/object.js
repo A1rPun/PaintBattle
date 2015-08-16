@@ -23,8 +23,10 @@ PB.object = (function () {
 
             for (var i = objects.length; i--;) {
                 var obj = objects[i];
-                if (!obj.canCollide)
+                if (!obj.canCollide) {
+                    result.other.push(obj);
                     continue;
+                }
                 var xDistance = x - obj.position.x; // subtract the X distances from each other. 
                 var yDistance = y - obj.position.y; // subtract the Y distances from each other. 
                 var distance = new PB.vector(xDistance, yDistance).magnitude(); // the distance between the balls is the sqrt of Xsquared + Ysquared.

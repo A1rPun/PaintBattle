@@ -22,9 +22,10 @@
         //Default properties that can't be overridden
         this.speed = DEFAULT_SPEED;
         this.radius = DEFAULT_RADIUS;
-        this.stunned = false;
-        this.jumping = false;
         this.drawing = true;
+        this.jumping = false;        
+        this.stunned = false;
+        this.freezed = false;
         this.jumpSpeed = 0;
         this.imgOffset = DEFAULT_IMAGE_OFFSET;
     }
@@ -48,7 +49,7 @@
             this.jumpSpeed = JUMP_HEIGHT * -1;
             this.addAngle(180);
         },
-        move: function () {
+        move: function (timer) {
             var me = this;
 
             if (me.isComputer) {
@@ -58,7 +59,9 @@
             } else if (PB.keys[me.right]) {
                 me.addAngle(DEFAULT_TURN_SPEED);
             }
-            me.position = me.resolve(me.speed);
+
+            if (!me.freezed)
+                me.position = me.resolve(me.stunned ? me.speed / 2 : me.speed);
 
             if (me.jumping) {
                 me.jumpSpeed += GRAVITY;
@@ -68,6 +71,11 @@
                     me.imgOffset = DEFAULT_IMAGE_OFFSET;
                     me.jumping = false;
                     me.canCollide = true;
+                    me.stunned = true;
+                    //TODO: Collision while stunned needs to be handled correctly with multiple timeouts (1 preferred)
+                    timer.setTimeout(function () {
+                        me.stunned = false;
+                    }, 5000)
                 }
             }
         },

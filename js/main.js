@@ -139,9 +139,11 @@
 
     makeImages({
         bg: 'img/canvas.png',
-        brush: 'img/brush.gif',
+        brush: 'img/brush.png',
+        clean: 'img/clean.png',
         shadow: 'img/shadow.png',
         pickup: 'img/present.png',
+        plaster: 'img/plaster.png'
     }, init);
     /*
     makeAudio({
