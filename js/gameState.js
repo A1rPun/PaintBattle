@@ -46,7 +46,7 @@
 
                 for (var i = me.moments.length; i--;) {
                     var m = me.moments[i];
-                    m.delta += delta;
+                    m.delta += me.interval;
 
                     if (m.delta < m.interval)
                         continue;
