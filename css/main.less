@@ -1,23 +1,29 @@
-﻿html, body {
-    margin:0;
-    padding:0;
-    overflow: hidden;
+﻿html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
 }
 
-body{
-    background-color:#333;
-    color: #fff;
+.container {
+  height: 100%;
+  background-color: #333;
+  background: url("../img/canvas.png");
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-canvas{
-    position: absolute;
-    left: 0;
+canvas {
+  position: absolute;
+  left: 0;
 }
 
-.center{
-    position: relative;
-    display: block;
-    width: 800px;
-    height: 600px;
-    margin: 10px auto;
+.center {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  box-shadow: 0 0 8px 8px black;
 }
