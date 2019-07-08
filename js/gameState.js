@@ -35,6 +35,7 @@
         me.then = me.now - (delta % me.interval);
 
         for (var i = me.moments.length; i--; ) {
+          if (!me.enabled) return;
           var m = me.moments[i];
           m.delta += me.interval;
 

@@ -34,10 +34,25 @@
 
   function endGame() {
     gameState.stop();
-    const result = getGameResult()
-      .map(x => `${x.name}: ${x.percent}% ${x.winner ? '🏆' : ''}`)
-      .join('\n');
-    alert(result);
+    const result = getGameResult();
+    propCtx.clearRect(0, 0, bounds.right, bounds.bottom);
+    const margin = 96;
+    propCtx.drawImage(
+      PB.images.scroll,
+      margin,
+      margin,
+      bounds.right - margin * 2,
+      bounds.bottom - margin * 2
+    );
+
+    propCtx.font = '32px Verdana';
+    const theX = bounds.right / 2 - 180;
+    result.forEach((x, i) => {
+      const theY = i * 48 + 210;
+      propCtx.fillStyle = x.color || '#000';
+      propCtx.fillText(`${x.name}:`, theX, theY);
+      propCtx.fillText(`${x.percent}% ${x.winner ? '🏆' : ''}`, theX + 250, theY);
+    });
   }
 
   function updatePlayers() {
@@ -207,9 +222,13 @@
     }, {});
     const result = players.map(player => ({
       name: player.name,
+      color: player.color,
       percent: Math.round((gameColors[player.color] * 100) / amountOfPixels),
     }));
-    result.slice().sort((a, b) => b.percent - a.percent)[0].winner = true;
+    const highestScore = result.slice().sort((a, b) => b.percent - a.percent)[0].percent;
+    result.forEach(x => {
+      if (x.percent === highestScore) x.winner = true;
+    });
     result.push({
       name: 'Total',
       percent: result.reduce((acc, cur) => acc + cur.percent, 0),
