@@ -3,7 +3,7 @@
     return Math.floor(Math.random() * num);
   }
 
-  var DEFAULT_RADIUS = 20,
+  var DEFAULT_RADIUS = 25,
     DEFAULT_SPEED = 2,
     DEFAULT_TURN_SPEED = 3,
     DEFAULT_IMAGE_OFFSET = DEFAULT_RADIUS / 2,

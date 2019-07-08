@@ -16,11 +16,7 @@
     canvas.height = bounds.bottom;
     propCanvas.width = bounds.right;
     propCanvas.height = bounds.bottom;
-    gameState.setInterval(update);
-    gameState.setTimeout(endGame, GAME_INTERVAL);
-    gameState.setInterval(function() {
-      pickups.push(new PB.pickup(bounds));
-    }, PICKUP_INTERVAL);
+    countdown();
 
     PB.keyHandler = function(key) {
       const space = 32;
@@ -30,6 +26,40 @@
         pause = !pause;
       }
     };
+  }
+
+  function countdown() {
+    let time = 3;
+    const x = bounds.right / 2 - 70;
+    const y = bounds.bottom / 2 + 70;
+    propCtx.font = 'bold 210px Verdana';
+    propCtx.fillStyle = 'lightblue';
+    propCtx.strokeStyle = 'blue';
+
+    propCtx.clearRect(0, 0, bounds.right, bounds.bottom);
+    drawPlayers();
+    propCtx.fillText(time, x, y);
+    propCtx.strokeText(time--, x, y);
+
+    const timer = gameState.setInterval(function() {
+      if (time) {
+        propCtx.clearRect(0, 0, bounds.right, bounds.bottom);
+        drawPlayers();
+        propCtx.fillText(time, x, y);
+        propCtx.strokeText(time--, x, y);
+      } else {
+        gameState.clearTimeout(timer);
+        startGame();
+      }
+    }, 1000);
+  }
+
+  function startGame() {
+    gameState.setInterval(update);
+    gameState.setTimeout(endGame, GAME_INTERVAL);
+    gameState.setInterval(function() {
+      pickups.push(new PB.pickup(bounds));
+    }, PICKUP_INTERVAL);
   }
 
   function endGame() {
