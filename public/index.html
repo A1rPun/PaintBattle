@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1e1a2b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Paint Battle</title>
+    <meta name="description" content="Paint Battle - join a game with your phone" />
+    <link href="css/controller.css" rel="stylesheet" />
+    <script type="module" src="js/controller.js"></script>
+  </head>
+  <body>
+    <form id="join" class="screen">
+      <h1>Paint Battle</h1>
+      <label>
+        Room code
+        <input id="codeInput" name="code" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+      </label>
+      <label>
+        Your name
+        <input id="nameInput" name="name" maxlength="12" autocomplete="nickname" required />
+      </label>
+      <button type="submit">Join</button>
+      <p id="error" class="error" role="alert"></p>
+      <p class="host-link">Got a big screen? <a href="/host">Host a game on it</a></p>
+    </form>
+
+    <main id="pad" class="screen" hidden>
+      <header>
+        <span id="who"></span>
+        <button id="leave" type="button" aria-label="Leave game">✕</button>
+      </header>
+      <div class="halves" aria-hidden="true">
+        <div id="left">◀</div>
+        <div id="right">▶</div>
+      </div>
+      <div class="center">
+        <p id="status"></p>
+        <button id="action" type="button" hidden></button>
+      </div>
+      <p id="toast" aria-live="polite"></p>
+      <p id="offline" hidden>Reconnecting…</p>
+    </main>
+  </body>
+</html>

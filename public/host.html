@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paint Battle</title>
+    <meta name="description" content="Paint Battle - A Battle Painters clone. Grab your phone and paint!" />
+    <link href="css/main.css" rel="stylesheet" />
+    <script type="module" src="js/host.js"></script>
+  </head>
+  <body>
+    <div class="stage">
+      <canvas id="BG"></canvas>
+      <canvas id="PB"></canvas>
+      <canvas id="Prop"></canvas>
+
+      <section id="lobby" class="overlay">
+        <div class="join">
+          <h1>Paint Battle</h1>
+          <p class="hint">Scan to join with your phone</p>
+          <img id="qr" alt="QR code to join" />
+          <p class="hint">or go to <strong id="joinHost">…</strong> and enter</p>
+          <p id="code" class="code">····</p>
+        </div>
+        <div class="roster">
+          <h2>Players <span id="count">0/8</span></h2>
+          <ul id="players"></ul>
+          <div class="buttons">
+            <button id="addBot" type="button">+ Bot</button>
+            <button id="start" type="button" class="primary">Start</button>
+          </div>
+          <p class="hint small">Enter = start · B = add bot · M = music on/off</p>
+        </div>
+      </section>
+
+      <footer id="resultsBar" class="bar" hidden>
+        <button id="again" type="button" class="primary">Play again</button>
+        <button id="toLobby" type="button">Lobby</button>
+      </footer>
+    </div>
+
+    <div id="roomChip" class="chip" hidden></div>
+    <div id="offline" class="chip offline" hidden>Connection lost, reconnecting…</div>
+  </body>
+</html>
